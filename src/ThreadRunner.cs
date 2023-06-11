@@ -9,13 +9,14 @@ namespace DCFApixels.DragonECS
         private static ThreadReacord[] _threads;
 
         private static ThreadWorkerHandler _worker;
+        private static ThreadWorkerHandler _nullWorker = delegate { };
         private static int[] _entities = new int[64];
 
         private static void ThreadProc(object obj)
         {
             ref ThreadReacord record = ref _threads[(int)obj];
-            try
-            {
+            //try
+            //{
                 while (Thread.CurrentThread.IsAlive)
                 {
                     record.runWork.WaitOne();
@@ -23,8 +24,8 @@ namespace DCFApixels.DragonECS
                     _worker.Invoke(new ReadOnlySpan<int>(_entities, record.start, record.size));
                     record.doneWork.Set();
                 }
-            }
-            catch { }
+            //}
+            //catch { }
         }
 
         static ThreadRunner()
@@ -42,7 +43,7 @@ namespace DCFApixels.DragonECS
                 };
                 _threads[i].thread.Start(i);
             }
-            _worker = delegate { };
+            _worker = _nullWorker;
         }
 
         public static void Run(ThreadWorkerHandler worker, EcsReadonlyGroup entities, int minSpanSize)
@@ -86,7 +87,7 @@ namespace DCFApixels.DragonECS
                 _threads[i].doneWork.WaitOne();
             }
 
-            _worker = null;
+            _worker = _nullWorker;
         }
 
         private struct ThreadReacord
