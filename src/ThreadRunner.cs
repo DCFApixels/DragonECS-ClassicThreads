@@ -21,7 +21,6 @@ namespace DCFApixels.DragonECS
                     record.runWork.WaitOne();
                     record.runWork.Reset();
                     _worker.Invoke(new ReadOnlySpan<int>(_entities, record.start, record.size));
-
                     record.doneWork.Set();
                 }
             }
@@ -66,7 +65,7 @@ namespace DCFApixels.DragonECS
                     thread.start = i * spanSize;
                     thread.size = spanSize;
                 }
-                _threads[^1].size = entities.Count % (threadsCount - 1);
+                _threads[threadsCount - 1].size = entities.Count % (threadsCount - 1);
             }
             else
             {
@@ -79,7 +78,7 @@ namespace DCFApixels.DragonECS
             for (int i = 0; i < threadsCount; i++)
             {
                 ref var thread = ref _threads[i];
-                thread.runWork.Reset();
+                thread.doneWork.Reset();
                 thread.runWork.Set();
             }
             for (int i = 0; i < threadsCount; i++)
