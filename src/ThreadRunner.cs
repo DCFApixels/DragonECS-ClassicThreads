@@ -52,8 +52,8 @@ namespace DCFApixels.DragonECS
             int entitiesCount = entities.Bake(ref _entities);
 
             int threadsCount = entitiesCount / minSpanSize;
-            //if (entitiesCount % minSpanSize > 0)
-            //    threadsCount++;
+            if (entitiesCount % minSpanSize > 0)
+                threadsCount++;
             if (threadsCount > _maxThreadsCount)
                 threadsCount = _maxThreadsCount;
 
