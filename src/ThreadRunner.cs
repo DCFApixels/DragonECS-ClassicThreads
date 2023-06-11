@@ -1,3 +1,6 @@
+using System;
+using System.Threading;
+
 namespace DCFApixels.DragonECS
 {
     internal static class ThreadRunner
