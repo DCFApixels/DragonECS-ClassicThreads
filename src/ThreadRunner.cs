@@ -11,10 +11,12 @@ namespace DCFApixels.DragonECS
         private static ThreadWorkerHandler _worker;
         private static ThreadWorkerHandler _nullWorker = delegate { };
         private static int[] _entities = new int[64];
+        private static List<Exception> _catchedExceptions;
 
         private static void ThreadProc(object obj)
         {
-            ref ThreadReacord record = ref _threads[(int)obj];
+            int i = (int)obj;
+            ref ThreadReacord record = ref _threads[i];
 
             while (Thread.CurrentThread.IsAlive)
             {
@@ -25,10 +27,12 @@ namespace DCFApixels.DragonECS
                     _worker.Invoke(new ReadOnlySpan<int>(_entities, record.start, record.size));
                     record.doneWork.Set();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    if (_catchedExceptions == null)
+                        _catchedExceptions = new List<Exception>();
+                    _catchedExceptions.Add(e);
                     record.doneWork.Set();
-                    throw;
                 }
             }
         }
@@ -93,6 +97,12 @@ namespace DCFApixels.DragonECS
             }
 
             _worker = _nullWorker;
+            if(_catchedExceptions != null)
+            {
+                var exceptions = _catchedExceptions;
+                _catchedExceptions = null;
+                throw new AggregateException("Mutiplie exceptions", exceptions);
+            }
         }
 
         private struct ThreadReacord
@@ -100,7 +110,6 @@ namespace DCFApixels.DragonECS
             public Thread thread;
             public ManualResetEvent runWork;
             public ManualResetEvent doneWork;
-
             public int start;
             public int size;
         }
