@@ -15,17 +15,22 @@ namespace DCFApixels.DragonECS
         private static void ThreadProc(object obj)
         {
             ref ThreadReacord record = ref _threads[(int)obj];
-            //try
-            //{
-                while (Thread.CurrentThread.IsAlive)
+
+            while (Thread.CurrentThread.IsAlive)
+            {
+                try
                 {
                     record.runWork.WaitOne();
                     record.runWork.Reset();
                     _worker.Invoke(new ReadOnlySpan<int>(_entities, record.start, record.size));
                     record.doneWork.Set();
                 }
-            //}
-            //catch { }
+                catch (Exception)
+                {
+                    record.doneWork.Set();
+                    throw;
+                }
+            }
         }
 
         static ThreadRunner()
