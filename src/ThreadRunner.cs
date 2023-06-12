@@ -9,8 +9,8 @@ namespace DCFApixels.DragonECS
         private readonly static int _maxThreadsCount;
         private static ThreadReacord[] _threads;
 
-        private static ThreadWorkerHandler _worker;
-        private static ThreadWorkerHandler _nullWorker = delegate { };
+        private static EcsThreadHandler _worker;
+        private static EcsThreadHandler _nullWorker = delegate { };
         private static int[] _entities = new int[64];
         private static List<Exception> _catchedExceptions;
 
@@ -58,7 +58,7 @@ namespace DCFApixels.DragonECS
             _worker = _nullWorker;
         }
 
-        public static void Run(ThreadWorkerHandler worker, EcsReadonlyGroup entities, int minSpanSize)
+        public static void Run(EcsThreadHandler worker, EcsReadonlyGroup entities, int minSpanSize)
         {
 #if (DEBUG && !DISABLE_DEBUG) || ENABLE_DRAGONECS_ASSERT_CHEKS
             if (_isRunning)
@@ -123,5 +123,5 @@ namespace DCFApixels.DragonECS
             public int size;
         }
     }
-    public delegate void ThreadWorkerHandler(ReadOnlySpan<int> entities);
+    public delegate void EcsThreadHandler(ReadOnlySpan<int> entities);
 }
