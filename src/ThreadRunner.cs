@@ -13,6 +13,8 @@ namespace DCFApixels.DragonECS
         private static int[] _entities = new int[64];
         private static List<Exception> _catchedExceptions;
 
+        private static bool _isRunning = false;
+
         private static void ThreadProc(object obj)
         {
             int i = (int)obj;
@@ -57,6 +59,11 @@ namespace DCFApixels.DragonECS
 
         public static void Run(ThreadWorkerHandler worker, EcsReadonlyGroup entities, int minSpanSize)
         {
+#if (DEBUG && !DISABLE_DEBUG) || ENABLE_DRAGONECS_ASSERT_CHEKS
+            if (_isRunning)
+                throw new InvalidOperationException("It is forbidden to start a parallel iteration before the last one is finished.");
+#endif
+            _isRunning = true;
             _worker = worker;
             int entitiesCount = entities.Bake(ref _entities);
 
@@ -96,6 +103,7 @@ namespace DCFApixels.DragonECS
                 _threads[i].doneWork.WaitOne();
             }
 
+            _isRunning = false;
             _worker = _nullWorker;
             if(_catchedExceptions != null)
             {
