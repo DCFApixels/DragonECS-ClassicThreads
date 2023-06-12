@@ -1,5 +1,5 @@
 <p align="center">
-<img width="400" src="https://github.com/DCFApixels/DragonECS-ClassicThreads/assets/99481254/94f0e891-2f0a-48e2-85e8-78e3635b3200.png">
+<img width="400" src="https://github.com/DCFApixels/DragonECS-ClassicThreads/assets/99481254/fe788eb4-dcb5-40a9-b25f-4094753bc021.png">
 </p>
 
 <p align="center">
