@@ -76,14 +76,20 @@ namespace DCFApixels.DragonECS
 
             if (threadsCount > 1)
             {
-                int spanSize = entitiesCount / (threadsCount - 1);
-                for (int i = 0; i < threadsCount; i++)
+                int remainder = entitiesCount % threadsCount;
+                int quotient = entitiesCount / threadsCount;
+                for (int i = 0, start = 0; i < threadsCount; i++)
                 {
                     ref var thread = ref _threads[i];
-                    thread.start = i * spanSize;
-                    thread.size = spanSize;
+                    thread.start = start;
+                    thread.size = quotient;
+                    if (remainder > 0)
+                    {
+                        thread.size++;
+                        remainder--;
+                    }
+                    start += thread.size;
                 }
-                _threads[threadsCount - 1].size = entities.Count % (threadsCount - 1);
             }
             else
             {
