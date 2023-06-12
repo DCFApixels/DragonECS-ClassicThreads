@@ -43,6 +43,7 @@ public void Run(EcsPipeline pipeline)
     {
         foreach (var e in entities)
         {
+            //Вычисления в отедльном потоке.
             s.poses.Get(e).position += s.velocities.Read(e).value * _time.DeltaTime;
         }
     }
