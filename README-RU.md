@@ -1,4 +1,8 @@
 <p align="center">
+<img width="400" src="https://github.com/DCFApixels/DragonECS-ClassicThreads/assets/99481254/94f0e891-2f0a-48e2-85e8-78e3635b3200.png">
+</p>
+
+<p align="center">
 <img alt="Version" src="https://img.shields.io/github/package-json/v/DCFApixels/DragonECS-ClassicThreads?color=%23ff4e85&style=for-the-badge">
 <img alt="License" src="https://img.shields.io/github/license/DCFApixels/DragonECS-ClassicThreads?color=ff4e85&style=for-the-badge">
 <!--<img alt="Discord" src="https://img.shields.io/discord/1111696966208999525?color=%23ff4e85&label=Discord&logo=Discord&logoColor=%23ff4e85&style=for-the-badge">-->
@@ -10,7 +14,7 @@
 | :--- | :--- | :--- |
 
 Поддержка обработки сущностей в нескольких потоках, на основе классической реализации потоков в C#.
-> **ВАЖНО!** Проект в стадии разработки. API может меняться.
+> **NOTICE:** Проект в стадии разработки. API может меняться.
 # Оглавление
 * [Установка](#Установка)
    * [Зависимости](#Зависимости)
@@ -54,4 +58,4 @@ public void Run(EcsPipeline pipeline)
 ```
 > **NOTICE:** Чем меньше минимальный размер части группы при делении, тем больше потоков может быть задействовано, в некоторых ситуациях слишком много потоков может негативно повлиять на производительность.
 
-> **NOTICE:** Внутри обработчика запрещено изменять состояние мира: нельзя создавать/удалять сущности, нельзя добавлять/удалять компоненты на сущности. Допускается только модификация данных внутри существующих компонентов.
+> **NOTICE:** Внутри обработчика запрещено создавать/удалять сущности, запрещено добавлять/удалять компоненты на сущности. Допускается только модификация данных внутри компонентов.
