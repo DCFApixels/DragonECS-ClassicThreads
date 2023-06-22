@@ -112,7 +112,7 @@ namespace DCFApixels.DragonECS
 
             _isRunning = false;
             _worker = _nullWorker;
-            if(_catchedExceptions != null)
+            if (_catchedExceptions != null)
             {
                 var exceptions = _catchedExceptions;
                 _catchedExceptions = null;
