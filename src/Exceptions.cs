@@ -2,11 +2,14 @@
 
 namespace DCFApixels.DragonECS
 {
-    public static class EcsThrowHalper_ClassicThreads
+    namespace ClassicThreadsInternal
     {
-        internal static void DoubleParallelIteration(this EcsThrowHalper _)
+        internal static class Throw
         {
-            throw new InvalidOperationException("It is forbidden to start a parallel iteration before the last one is finished.");
+            internal static void DoubleParallelIteration()
+            {
+                throw new InvalidOperationException("It is forbidden to start a parallel iteration before the last one is finished.");
+            }
         }
     }
 }

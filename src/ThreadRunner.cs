@@ -1,7 +1,7 @@
+using DCFApixels.DragonECS.ClassicThreadsInternal;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using static DCFApixels.DragonECS.EcsThrowHalper;
 
 namespace DCFApixels.DragonECS
 {
