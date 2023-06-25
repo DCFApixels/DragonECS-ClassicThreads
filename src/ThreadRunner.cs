@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using static DCFApixels.DragonECS.EcsThrowHalper;
 
 namespace DCFApixels.DragonECS
 {
@@ -61,8 +62,7 @@ namespace DCFApixels.DragonECS
         public static void Run(EcsThreadHandler worker, EcsReadonlyGroup entities, int minSpanSize)
         {
 #if (DEBUG && !DISABLE_DEBUG) || ENABLE_DRAGONECS_ASSERT_CHEKS
-            if (_isRunning)
-                throw new InvalidOperationException("It is forbidden to start a parallel iteration before the last one is finished.");
+            if (_isRunning) Throw.DoubleParallelIteration();
 #endif
             _isRunning = true;
             _worker = worker;
@@ -116,7 +116,7 @@ namespace DCFApixels.DragonECS
             {
                 var exceptions = _catchedExceptions;
                 _catchedExceptions = null;
-                throw new AggregateException("Mutiplie exceptions", exceptions);
+                throw new AggregateException(exceptions);
             }
         }
 
