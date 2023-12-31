@@ -65,7 +65,7 @@ namespace DCFApixels.DragonECS
 #endif
             _isRunning = true;
             _worker = worker;
-            int entitiesCount = entities.Length; //entities.Bake(ref _entities);
+            int entitiesCount = entities.Bake(ref _entities);
 
             int threadsCount = entitiesCount / minSpanSize;
             if (entitiesCount % minSpanSize > 0)
