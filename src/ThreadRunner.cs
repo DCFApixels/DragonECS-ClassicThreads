@@ -1,5 +1,6 @@
 using DCFApixels.DragonECS.ClassicThreadsInternal;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -13,7 +14,7 @@ namespace DCFApixels.DragonECS
         private static EcsThreadHandler _worker;
         private static EcsThreadHandler _nullWorker = delegate { };
         private static int[] _entities = new int[64];
-        private static List<Exception> _catchedExceptions;
+        private static ConcurrentQueue<Exception> _catchedExceptions = new ConcurrentQueue<Exception>();
 
         private static bool _isRunning = false;
 
@@ -33,9 +34,7 @@ namespace DCFApixels.DragonECS
                 }
                 catch (Exception e)
                 {
-                    if (_catchedExceptions == null)
-                        _catchedExceptions = new List<Exception>();
-                    _catchedExceptions.Add(e);
+                    _catchedExceptions.Enqueue(e);
                     record.doneWork.Set();
                 }
             }
@@ -59,20 +58,24 @@ namespace DCFApixels.DragonECS
             _worker = _nullWorker;
         }
 
-        public static void Run(EcsThreadHandler worker, EcsReadonlyGroup entities, int minSpanSize)
+        public static void Run(EcsThreadHandler worker, EcsSpan entities, int minSpanSize)
         {
 #if (DEBUG && !DISABLE_DEBUG) || ENABLE_DRAGONECS_ASSERT_CHEKS
             if (_isRunning) Throw.DoubleParallelIteration();
 #endif
             _isRunning = true;
             _worker = worker;
-            int entitiesCount = entities.Bake(ref _entities);
+            int entitiesCount = entities.Length; //entities.Bake(ref _entities);
 
             int threadsCount = entitiesCount / minSpanSize;
             if (entitiesCount % minSpanSize > 0)
+            {
                 threadsCount++;
+            }
             if (threadsCount > _maxThreadsCount)
+            {
                 threadsCount = _maxThreadsCount;
+            }
 
             if (threadsCount > 1)
             {
@@ -112,10 +115,10 @@ namespace DCFApixels.DragonECS
 
             _isRunning = false;
             _worker = _nullWorker;
-            if (_catchedExceptions != null)
+            if (_catchedExceptions.Count > 0)
             {
-                var exceptions = _catchedExceptions;
-                _catchedExceptions = null;
+                Exception[] exceptions = _catchedExceptions.ToArray();
+                _catchedExceptions.Clear();
                 throw new AggregateException(exceptions);
             }
         }
