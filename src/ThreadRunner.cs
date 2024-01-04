@@ -18,6 +18,8 @@ namespace DCFApixels.DragonECS
 
         private static bool _isRunning = false;
 
+        private static object _lock = new object();
+
         private static void ThreadProc(object obj)
         {
             int i = (int)obj;
@@ -117,9 +119,12 @@ namespace DCFApixels.DragonECS
             _worker = _nullWorker;
             if (_catchedExceptions.Count > 0)
             {
-                Exception[] exceptions = _catchedExceptions.ToArray();
-                _catchedExceptions.Clear();
-                throw new AggregateException(exceptions);
+                lock (_lock)
+                {
+                    Exception[] exceptions = _catchedExceptions.ToArray();
+                    _catchedExceptions = new ConcurrentQueue<Exception>();
+                    throw new AggregateException(exceptions);
+                }
             }
         }
 
