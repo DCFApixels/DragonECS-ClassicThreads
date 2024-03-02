@@ -62,11 +62,20 @@ namespace DCFApixels.DragonECS
         public static void Run(EcsThreadHandler worker, EcsSpan entities, int minSpanSize)
         {
 #if (DEBUG && !DISABLE_DEBUG) || ENABLE_DRAGONECS_ASSERT_CHEKS
-            if (_isRunning) Throw.DoubleParallelIteration();
+            if (_isRunning) { Throw.DoubleParallelIteration(); }
 #endif
             _isRunning = true;
             _worker = worker;
-            int entitiesCount = entities.Bake(ref _entities);
+
+            if (_entities.Length < entities.Count)
+            {
+                Array.Resize(ref _entities, entities.Count);
+            }
+            for (int i = 0; i < entities.Count; i++)
+            {
+                _entities[i] = entities[i];
+            }
+            int entitiesCount = entities.Count;
 
             int threadsCount = entitiesCount / minSpanSize;
             if (entitiesCount % minSpanSize > 0)
