@@ -33,8 +33,6 @@ Optional:
 Tested with:
 + **Unity:** Minimum version 2020.1.0;
 
-</br>
-
 ## Unity Installation
 * ### Unity Package
 The framework can be installed as a Unity package by adding the Git URL [in the PackageManager](https://docs.unity3d.com/2023.2/Documentation/Manual/upm-ui-giturl.html) or manually adding it to `Packages/manifest.json`: 
