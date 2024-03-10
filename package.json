@@ -1,17 +1,17 @@
 {
-    "name": "com.dcfa_pixels.dragonecs-threads",
+    "name": "com.dcfa_pixels.dragonecs-classic_threads",
     "author": 
     {
         "name": "DCFApixels",
         "url": "https://github.com/DCFApixels"
     },
-    "displayName": "DragonECS-Threads",
-    "description": "Multithreading for DragonECS",
+    "displayName": "DragonECS-ClassicThreads",
+    "description": "Classic C# Multithreading for DragonECS",
     "unity": "2020.3",
     "version": "0.2.3",
     "repository": {
         "type": "git",
-        "url": "https://github.com/DCFApixels/DragonECS-Threads.git"
+        "url": "https://github.com/DCFApixels/DragonECS-ClassicThreads.git"
     },
     "dependencies": {
         "com.dcfa_pixels.dragonecs": "https://github.com/DCFApixels/DragonECS.git" 
