@@ -17,5 +17,51 @@ Support for processing entities in multiple threads, based on classic C# threads
 > **NOTICE:** The project is a work in progress, API may change.  
 > While the English version of the README is incomplete, you can view the [Russian version](https://github.com/DCFApixels/DragonECS-ClassicThreads/blob/main/README-RU.md).
 
-# Versioning
-DragonECS uses this versioning semantics: [Open](https://gist.github.com/DCFApixels/c3b178a308b411f530361d1d56f1f929#versioning)
+</br>
+
+# Installation
+Versioning semantics - [Open](https://gist.github.com/DCFApixels/e53281d4628b19fe5278f3e77a7da9e8#file-dcfapixels_versioning_ru-md)
+## Environment
+Requirements:
++ Dependency: [DragonECS](https://github.com/DCFApixels/DragonECS)
++ Minimum version of C# 7.3;
+  
+Optional:
++ Support for NativeAOT
++ Game engines with C#: Unity, Godot, MonoGame, etc.
+  
+Tested with:
++ **Unity:** Minimum version 2020.1.0;
+
+</br>
+
+## Unity Installation
+* ### Unity Package
+The framework can be installed as a Unity package by adding the Git URL [in the PackageManager](https://docs.unity3d.com/2023.2/Documentation/Manual/upm-ui-giturl.html) or manually adding it to `Packages/manifest.json`: 
+```
+https://github.com/DCFApixels/DragonECS-ClassicThreads.git
+```
+* ### Source Code
+The framework can also be added to the project as source code.
+
+</br>
+
+# Parallel iteration
+``` csharp
+EcsThreadHandler _handler;
+public void Run(EcsPipeline pipeline)
+{
+    var group = _world.Where(out Aspect a);
+    void Handler(ReadOnlySpan<int> entities)
+    {
+        foreach (var e in entities)
+        {
+            a.poses.Get(e).position += a.velocities.Read(e).value * _time.DeltaTime;
+        }
+    }
+    group.IterateParallel(_handler ??= Handler, 1000);
+}
+```
+> **NOTICE:** The smaller the minimum size of the group part when dividing, the more threads can be utilized. In some situations, too many threads can negatively impact performance.
+
+> **NOTICE:** Inside the handler, creating/deleting entities, adding/removing components on entities is prohibited. Only modification of data within components is allowed.

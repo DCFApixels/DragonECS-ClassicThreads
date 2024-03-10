@@ -14,7 +14,9 @@
 | :--- | :--- | :--- |
 
 Поддержка обработки сущностей в нескольких потоках, на основе классической реализации потоков в C#.
-> **NOTICE:** Проект в стадии разработки. API может меняться.
+> [!WARNING]
+> Проект в стадии разработки. API может меняться.  
+
 # Оглавление
 * [Установка](#Установка)
    * [Зависимости](#Зависимости)
@@ -22,37 +24,50 @@
    * [В виде исходников](#В-виде-иходников)
 * [Параллельная итерация группы](#Параллельная-итерация-группы)
 
+</br>
+
 # Установка
-### Зависимости
-Убедитесь что в проекте установлен фреймворк [DragonECS](https://github.com/DCFApixels/DragonECS).
+Семантика версионирования - [Открыть](https://gist.github.com/DCFApixels/e53281d4628b19fe5278f3e77a7da9e8#file-dcfapixels_versioning_ru-md)
+## Окружение
+Обязательные требования:
++ Зависимость: [DragonECS](https://github.com/DCFApixels/DragonECS)
++ Минимальная версия C# 7.3;
+
+Опционально:
++ Поддержка NativeAOT
++ Игровые движки с C#: Unity, Godot, MonoGame и т.д.
+
+Протестированно:
++ **Unity:** Минимальная версия 2020.1.0;
+
+## Установка для Unity
 * ### Unity-модуль
 Поддерживается установка в виде Unity-модуля в  при помощи добавления git-URL [в PackageManager](https://docs.unity3d.com/2023.2/Documentation/Manual/upm-ui-giturl.html) или ручного добавления в `Packages/manifest.json`: 
 ```
 https://github.com/DCFApixels/DragonECS-AutoInjections.git
 ```
-* ### В виде исходников
-Фреймворк так же может быть добавлен в проект в виде исходников. 
+* ### В виде иходников
+Фреймворк так же может быть добавлен в проект в виде исходников.
 
-### Версионирование
-В DragonECS применяется следующая семантика версионирования: [Открыть](https://gist.github.com/DCFApixels/e53281d4628b19fe5278f3e77a7da9e8#%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D0%BE%D0%BD%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5)
+</br>
 
-# Параллельная итерация группы
+# Параллельная итерация
 ``` csharp
 EcsThreadHandler _handler;
 public void Run(EcsPipeline pipeline)
 {
-    //Получение субъекта и группы для итерации.
-    var group = _world.Where(out Subject s);
+    //Получение Аспекта и сцщностей для итерации.
+    var group = _world.Where(out Aspect a);
     void Handler(ReadOnlySpan<int> entities)
     {
         foreach (var e in entities)
         {
             //Вычисления в отедльном потоке.
-            s.poses.Get(e).position += s.velocities.Read(e).value * _time.DeltaTime;
+            a.poses.Get(e).position += a.velocities.Read(e).value * _time.DeltaTime;
         }
     }
-    // Запускает параллельную итерацию по группе, 
-    // группа будет рабита на части с минимальным размером 1000.
+    // Запускает параллельную итерацию по сущностям, 
+    // сущности будут разбита на части с минимальным размером 1000.
     group.IterateParallel(_handler ??= Handler, 1000);
 }
 ```
