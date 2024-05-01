@@ -5,6 +5,11 @@ using System.Threading;
 
 namespace DCFApixels.DragonECS
 {
+#if ENABLE_IL2CPP
+    using Unity.IL2CPP.CompilerServices;
+    [Il2CppSetOption (Option.NullChecks, false)]
+    [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
+#endif
     internal static class ThreadRunner
     {
         private readonly static int _maxThreadsCount;
@@ -147,3 +152,33 @@ namespace DCFApixels.DragonECS
     }
     public delegate void EcsThreadHandler(ReadOnlySpan<int> entities);
 }
+
+
+
+
+
+
+#if ENABLE_IL2CPP
+// Unity IL2CPP performance optimization attribute.
+namespace Unity.IL2CPP.CompilerServices 
+{
+    using System;
+    internal enum Option 
+    {
+        NullChecks = 1,
+        ArrayBoundsChecks = 2,
+        DivideByZeroChecks = 3,
+    }
+    [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Struct | AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Delegate, Inherited = false, AllowMultiple = true)]
+    internal class Il2CppSetOptionAttribute : Attribute
+    {
+        public Option Option { get; private set; }
+        public object Value { get; private set; }
+        public Il2CppSetOptionAttribute(Option option, object value)
+        {
+            Option = option;
+            Value = value;
+        }
+    }
+}
+#endif
