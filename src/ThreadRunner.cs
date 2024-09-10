@@ -1,6 +1,7 @@
 using DCFApixels.DragonECS.ClassicThreadsInternal;
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading;
 
 namespace DCFApixels.DragonECS
@@ -66,9 +67,16 @@ namespace DCFApixels.DragonECS
 
         public static void Run(EcsThreadHandler worker, EcsSpan entities, int minSpanSize)
         {
+            if (_isRunning)
+            {
 #if (DEBUG && !DISABLE_DEBUG) || ENABLE_DRAGONECS_ASSERT_CHEKS
-            if (_isRunning) { Throw.DoubleParallelIteration(); }
+                if (_threads.Any(o => o.thread == Thread.CurrentThread))
+                {
+                    Throw.DoubleParallelIteration();
+                }
 #endif
+                while (_isRunning) { }
+            }
             _isRunning = true;
             _worker = worker;
 
