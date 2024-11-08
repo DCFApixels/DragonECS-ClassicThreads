@@ -8,7 +8,7 @@ namespace DCFApixels.DragonECS
 {
 #if ENABLE_IL2CPP
     using Unity.IL2CPP.CompilerServices;
-    [Il2CppSetOption (Option.NullChecks, false)]
+    [Il2CppSetOption(Option.NullChecks, false)]
     [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
 #endif
     internal static class ThreadRunner
@@ -168,10 +168,10 @@ namespace DCFApixels.DragonECS
 
 #if ENABLE_IL2CPP
 // Unity IL2CPP performance optimization attribute.
-namespace Unity.IL2CPP.CompilerServices 
+namespace Unity.IL2CPP.CompilerServices
 {
     using System;
-    internal enum Option 
+    internal enum Option
     {
         NullChecks = 1,
         ArrayBoundsChecks = 2,
