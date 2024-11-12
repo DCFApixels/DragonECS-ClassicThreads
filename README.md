@@ -35,7 +35,7 @@
 
 </br>
 
-Support for processing entities in multiple threads, based on classic C# threads implementation.
+Support for processing entities in multiple threads, based on classic C# threads implementation. Inspired by a similar extension for [LeoEcs Lite](https://github.com/Leopotam/ecslite-threads).
 
 > [!WARNING]
 > The project is a work in progress, API may change.  
