@@ -11,8 +11,29 @@
 
 # Classic C# Threads for [DragonECS](https://github.com/DCFApixels/DragonECS)
 
-| Languages: | [Русский](https://github.com/DCFApixels/DragonECS-ClassicThreads/blob/main/README-RU.md) | [English(WIP)](https://github.com/DCFApixels/DragonECS-ClassicThreads) |
-| :--- | :--- | :--- |
+<table>
+  <tr></tr>
+  <tr>
+    <td colspan="3">Readme Languages:</td>
+  </tr>
+  <tr></tr>
+  <tr>
+    <td nowrap width="100">
+      <a href="https://github.com/DCFApixels/DragonECS-ClassicThreads/blob/main/README-RU.md">
+        <img src="https://github.com/user-attachments/assets/7bc29394-46d6-44a3-bace-0a3bae65d755"></br>
+        <span>Русский</span>
+      </a>  
+    </td>
+    <td nowrap width="100">
+      <a href="https://github.com/DCFApixels/DragonECS-ClassicThreads">
+        <img src="https://github.com/user-attachments/assets/3c699094-f8e6-471d-a7c1-6d2e9530e721"></br>
+        <span>English</span>
+      </a>  
+    </td>
+  </tr>
+</table>
+
+</br>
 
 Support for processing entities in multiple threads, based on classic C# threads implementation.
 > **NOTICE:** The project is a work in progress, API may change.  
@@ -36,12 +57,12 @@ Tested with:
 
 ## Unity Installation
 * ### Unity Package
-The framework can be installed as a Unity package by adding the Git URL [in the PackageManager](https://docs.unity3d.com/2023.2/Documentation/Manual/upm-ui-giturl.html) or manually adding it to `Packages/manifest.json`: 
+The package can be installed as a Unity package by adding the Git URL [in the PackageManager](https://docs.unity3d.com/2023.2/Documentation/Manual/upm-ui-giturl.html) or manually adding it to `Packages/manifest.json`: 
 ```
 https://github.com/DCFApixels/DragonECS-ClassicThreads.git
 ```
 * ### Source Code
-The framework can also be added to the project as source code.
+The package can also be added to the project as source code.
 
 </br>
 
@@ -50,17 +71,23 @@ The framework can also be added to the project as source code.
 EcsThreadHandler _handler;
 public void Run(EcsPipeline pipeline)
 {
+    // Getting the Aspect and entities for iteration.
     var group = _world.Where(out Aspect a);
+
     void Handler(ReadOnlySpan<int> entities)
     {
         foreach (var e in entities)
         {
+            // Computations in a separate thread.
             a.poses.Get(e).position += a.velocities.Read(e).value * _time.DeltaTime;
         }
     }
+
+    // Starts parallel iteration over entities,
+    // entities will be split into parts with a minimum size of 1000.
     group.IterateParallel(_handler ??= Handler, 1000);
 }
 ```
-> **NOTICE:** The smaller the minimum size of the group part when dividing, the more threads can be utilized. In some situations, too many threads can negatively impact performance.
+> The smaller the minimum size of the group part when dividing, the more threads can be utilized. In some situations, too many threads can negatively impact performance.
 
-> **NOTICE:** Inside the handler, creating/deleting entities, adding/removing components on entities is prohibited. Only modification of data within components is allowed.
+> Inside the handler, creating/deleting entities, adding/removing components on entities is prohibited. Only modification of data within components is allowed.

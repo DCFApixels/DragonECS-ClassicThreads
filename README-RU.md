@@ -11,8 +11,29 @@
 
 # Классические C# Threads для [DragonECS](https://github.com/DCFApixels/DragonECS)
 
-| Languages: | [Русский](https://github.com/DCFApixels/DragonECS-ClassicThreads/blob/main/README-RU.md) | [English(WIP)](https://github.com/DCFApixels/DragonECS-ClassicThreads) |
-| :--- | :--- | :--- |
+<table>
+  <tr></tr>
+  <tr>
+    <td colspan="3">Readme Languages:</td>
+  </tr>
+  <tr></tr>
+  <tr>
+    <td nowrap width="100">
+      <a href="https://github.com/DCFApixels/DragonECS-ClassicThreads/blob/main/README-RU.md">
+        <img src="https://github.com/user-attachments/assets/3c699094-f8e6-471d-a7c1-6d2e9530e721"></br>
+        <span>Русский</span>
+      </a>  
+    </td>
+    <td nowrap width="100">
+      <a href="https://github.com/DCFApixels/DragonECS-ClassicThreads">
+        <img src="https://github.com/user-attachments/assets/30528cb5-f38e-49f0-b23e-d001844ae930"></br>
+        <span>English</span>
+      </a>  
+    </td>
+  </tr>
+</table>
+
+</br>
 
 Поддержка обработки сущностей в нескольких потоках, на основе классической реализации потоков в C#.
 > [!WARNING]
@@ -35,7 +56,7 @@
 + Поддержка NativeAOT
 + Игровые движки с C#: Unity, Godot, MonoGame и т.д.
 
-Протестированно:
+Протестировано:
 + **Unity:** Минимальная версия 2020.1.0;
 
 ## Установка для Unity
@@ -44,8 +65,8 @@
 ```
 https://github.com/DCFApixels/DragonECS-ClassicThreads.git
 ```
-* ### В виде иходников
-Фреймворк так же может быть добавлен в проект в виде исходников.
+* ### В виде исходников
+Пакет так же может быть добавлен в проект в виде исходников.
 
 </br>
 
@@ -54,21 +75,21 @@ https://github.com/DCFApixels/DragonECS-ClassicThreads.git
 EcsThreadHandler _handler;
 public void Run(EcsPipeline pipeline)
 {
-    //Получение Аспекта и сцщностей для итерации.
-    var group = _world.Where(out Aspect a);
+    //Получение Аспекта и сущностей для итерации.
+    var ee = _world.Where(out Aspect a);
     void Handler(ReadOnlySpan<int> entities)
     {
         foreach (var e in entities)
         {
-            //Вычисления в отедльном потоке.
+            //Вычисления в отдельном потоке.
             a.poses.Get(e).position += a.velocities.Read(e).value * _time.DeltaTime;
         }
     }
     // Запускает параллельную итерацию по сущностям, 
     // сущности будут разбита на части с минимальным размером 1000.
-    group.IterateParallel(_handler ??= Handler, 1000);
+    ee.IterateParallel(_handler ??= Handler, 1000);
 }
 ```
-> **NOTICE:** Чем меньше минимальный размер части группы при делении, тем больше потоков может быть задействовано, в некоторых ситуациях слишком много потоков может негативно повлиять на производительность.
+> Чем меньше минимальный размер части группы при делении, тем больше потоков может быть задействовано, в некоторых ситуациях слишком много потоков может негативно повлиять на производительность.
 
-> **NOTICE:** Внутри обработчика запрещено создавать/удалять сущности, запрещено добавлять/удалять компоненты на сущности. Допускается только модификация данных внутри компонентов.
+> Внутри обработчика запрещено создавать/удалять сущности, запрещено добавлять/удалять компоненты на сущности. Допускается только модификация данных внутри компонентов.
