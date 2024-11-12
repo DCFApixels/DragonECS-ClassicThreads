@@ -36,8 +36,11 @@
 </br>
 
 Support for processing entities in multiple threads, based on classic C# threads implementation.
-> **NOTICE:** The project is a work in progress, API may change.  
-> While the English version of the README is incomplete, you can view the [Russian version](https://github.com/DCFApixels/DragonECS-ClassicThreads/blob/main/README-RU.md).
+
+> [!WARNING]
+> The project is a work in progress, API may change.  
+>
+> The most current version of the README is in [Russian version](https://github.com/DCFApixels/DragonECS-ClassicThreads/blob/main/README-RU.md).
 
 </br>
 
