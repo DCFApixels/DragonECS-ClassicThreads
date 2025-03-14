@@ -1,3 +1,6 @@
+#if DISABLE_DEBUG
+#undef DEBUG
+#endif
 using DCFApixels.DragonECS.ClassicThreadsInternal;
 using System;
 using System.Collections.Concurrent;
@@ -69,7 +72,7 @@ namespace DCFApixels.DragonECS
         {
             if (_isRunning)
             {
-#if (DEBUG && !DISABLE_DEBUG) || ENABLE_DRAGONECS_ASSERT_CHEKS
+#if DEBUG || ENABLE_DRAGONECS_ASSERT_CHEKS
                 if (_threads.Any(o => o.thread == Thread.CurrentThread))
                 {
                     Throw.DoubleParallelIteration();
