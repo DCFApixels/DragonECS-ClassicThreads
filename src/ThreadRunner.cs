@@ -72,7 +72,7 @@ namespace DCFApixels.DragonECS
         {
             if (_isRunning)
             {
-#if DEBUG || ENABLE_DRAGONECS_ASSERT_CHEKS
+#if DEBUG || DRAGONECS_STABILITY_MODE
                 if (_threads.Any(o => o.thread == Thread.CurrentThread))
                 {
                     Throw.DoubleParallelIteration();
